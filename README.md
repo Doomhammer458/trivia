@@ -2,7 +2,8 @@ Trivia
 ===============
 
 
-The app trivia.py creates a Tornado based web server to generate the questions and receive the answers
+The app trivia.py creates a Tornado based web server to generate the questions and receive the answers.
+
 
 steps to create your own challenge: 
 
