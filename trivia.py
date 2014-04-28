@@ -15,12 +15,17 @@ def find_questions():
         if ".html" in f:
             html_files.append(f)
     c = 0
+    question_nums = []
     for f in html_files:
         try:
-            int(f[:-5])
+            question_nums.append(int(f[:-5]))
             c+=1
         except:
             pass
+    if c == 0:
+        raise Exception("No questions found")
+    if sum(question_nums) != sum(range(1,c+1)):
+        raise Exception("Missing questions. Question numbers should be sequential")
     return c
         
     
