@@ -106,9 +106,9 @@ class WinnersHandler(BaseHandler):
 class Question(BaseHandler):
     """   
 user progress is tracked by the user dict. For each question the handler checks
-the user dict and the serves the corresponding question to the user.
+the user dict and then serves the corresponding question to the user.
 When the user answers a question the post function checks their answer against 
-the answer dict and if right sets a time stamp cookie for the next question and 
+the answer dict and if right, sets a time stamp cookie for the next question and 
 changes the users entry in the users dict so the next question will be served.
 
     """      
@@ -164,7 +164,7 @@ application = tornado.web.Application([
 	(r"/winners", WinnersHandler),
 	(r"/login/", LoginHandler),
 ],static_path=STATIC_PATH,login_url=r"/login/", 
- cookie_secret="35wfa35tgty5wf5yhxbt4"+str(random.randint(0,1000000)))
+ cookie_secret="35wfa35tgtres5wf5yhxbt4"+str(random.randint(0,1000000)))
 
 if __name__ == "__main__":
     application.listen(80)
