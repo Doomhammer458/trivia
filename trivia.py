@@ -72,9 +72,12 @@ class BaseHandler(tornado.web.RequestHandler):
 	    if datetime.datetime.utcnow() < contest_start:
 	        self.write("cheater!")
             else:
-           	zero_time=datetime.datetime.utcnow()
-           	time = toTStamp(zero_time)
-           	self.set_secure_cookie("0",time,expires_days=2) #stores start time as a cookie which is used to calculate when clue appears
+                if self.get_secure_cookie("0") == None:
+                    
+               	    zero_time=datetime.datetime.utcnow()
+               	    time = toTStamp(zero_time)
+               	    self.set_secure_cookie("0",time,expires_days=2) #stores start time as a cookie which is used to calculate when clues appears
+           	
            	self.redirect("/question")
 # users are tracked by setting a secure cookie for each user
 class LoginHandler(BaseHandler):
@@ -87,6 +90,7 @@ class LoginHandler(BaseHandler):
             user = self.get_argument("user")
             global users
             users[user] = 0
+        
             self.set_secure_cookie("login",user,expires_days=5)
             self.redirect("/")
 
@@ -95,7 +99,6 @@ class LeaderBoard(BaseHandler):
     def get(self):
         self.render("leaderboard.html", users=users)
 class WinnersHandler(BaseHandler):
-    @tornado.web.authenticated
     def get(self):
         self.render("winners.html", winners = winners, time=finish_times)
 
@@ -114,7 +117,11 @@ changes the users entry in the users dict so the next question will be served.
         user = self.current_user 
         try:
             time = self.get_secure_cookie(str(users[user]))
+            
+            
         except:
+            print user,
+            print " has experienced a key error"
             self.redirect("/login/")
             return
         if time == None:
