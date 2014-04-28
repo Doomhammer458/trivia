@@ -1,4 +1,4 @@
-Triva_Challenge
+Triva 
 ===============
 
 tornado based trivia challenge! 
