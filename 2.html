@@ -1,0 +1,58 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+ <link rel="shortcut icon" href="/static/favicon.ico" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="refresh" content="30">
+  <link rel="stylesheet" href="/static/css/normalize.css">
+  <link rel="stylesheet" href="/static/css/foundation.css" />
+ <script src="/static/js/vendor/modernizr.js"></script>
+    <title>Trivia! </title>
+</head>
+<body>
+<h1>Question 2</h1>
+<br>
+<h3>Topic: Greek mythology! </h3>
+<ul>
+<li>God</li>
+
+
+<br>
+{% if Now-time > timedelta(minutes=1)%}
+<li>Offspring of Zeus</li>
+{%end%}
+
+<br>
+{% if Now-time > timedelta(minutes=2)%}
+<li>Exiled from Olympus</li>
+{%end%}
+
+<br>
+{% if Now-time > timedelta(minutes=3)%}
+<li>Lame</li>
+{%end%}
+
+<br>
+{% if Now-time > timedelta(minutes=4)%}
+<li>Blacksmith</li>
+{%end%}
+
+<br>
+<br>
+    <form method="post" action="/question" > 
+    Answer:<input type="text" size =40 name="answer"> 
+    <input class = "round button" type=submit value="Submit"> 
+    </form> 
+</ul>
+<br>
+    <script src="/static/js/vendor/jquery.js"></script>
+    <script src="/static/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>

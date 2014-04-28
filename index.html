@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+ <link rel="shortcut icon" href="/static/favicon.ico" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="refresh" content="10">
+  <link rel="stylesheet" href="/static/css/normalize.css">
+  <link rel="stylesheet" href="/static/css/foundation.css" />
+ <script src="/static/js/vendor/modernizr.js"></script>
+    <title>Trivia! </title>
+</head>
+<body>
+<br>
+<br>
+<center> Welcome {{current_user}}!
+<br>
+<br>
+The contest will start at {{contest_start}} UTC
+<br>
+<br>
+{% if Now > contest_start %}
+<br>
+ <form method="post" action="/" > 
+ 
+    <input type=submit class="round button" value="Start"> 
+    </form> 
+	<br>
+
+{% else %}
+<iframe src="http://free.timeanddate.com/countdown/i44hjygg/n85/cf101/cm0/cu4/ct0/cs0/ca0/co1/cr0/ss0/cac000/cpc000/pc0ff/tcfff/fs100/szw320/szh135/tatTime%20left%20until%20contest/tac000/tptCONTEST%20HAS%20STARTED/tpc000/iso{{contest_start.isoformat()}}" frameborder="0" width="320" height="135"></iframe>
+{% end %}
+</center>
+
+
+<br>
+
+    <script src="/static/js/vendor/jquery.js"></script>
+    <script src="/static/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>

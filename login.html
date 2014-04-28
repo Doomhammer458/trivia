@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<link rel="shortcut icon" href="/static/favicon.ico" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="/static/css/normalize.css">
+  <link rel="stylesheet" href="/static/css/foundation.css" />
+ <script src="/static/js/vendor/modernizr.js"></script>
+
+    <title>Start</title>
+</head>
+<body>
+   <center> <h1>Please enter your Reddit user name</h1> </center>
+	<form method="post" action = "/login/">
+
+      <div class="row collapse">
+    <div class="small-2 large-1 columns">
+      <span class="prefix right inline">/u/</span>
+    </div>
+    <div class="small-10 large-11 columns">
+      <input type="text" placeholder="user name" name="user">
+    </div>
+  </div>
+ <center>
+    <input class ="round button " type=submit value="Submit"> 
+    </form> 
+	</center>
+	<script src="/static/js/vendor/jquery.js"></script>
+    <script src="/static/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>
