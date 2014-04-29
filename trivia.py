@@ -29,7 +29,8 @@ application = tornado.web.Application([
 	(r"/winners", WinnersHandler),
 	(r"/login/", LoginHandler),
 ],static_path=STATIC_PATH,login_url=r"/login/", 
- cookie_secret="35wfa35tgtres5wf5yhxbt4"+str(random.randint(0,1000000)))
+ cookie_secret=str(random.randint(0,1000))+"35wfa35tgtres5wf5yhxbt4"
+ +str(random.randint(0,1000000)))
 
 if __name__ == "__main__":
     application.listen(80)
