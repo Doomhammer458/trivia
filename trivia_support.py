@@ -53,8 +53,8 @@ class BaseHandler(tornado.web.RequestHandler):
             self.render("index.html",Now = datetime.datetime.utcnow(), 
             datetime=datetime.datetime,contest_start = self.contest_start)
         
-	def get_current_user(self):
-		return self.get_secure_cookie("login")
+	def get_current_user(self): 
+	   return self.get_secure_cookie("login")
 	def post(self):
 	    if datetime.datetime.utcnow() < self.contest_start:
 	        self.write("cheater!")
@@ -107,19 +107,21 @@ changes the users entry in the users dict so the next question will be served.
     def initialize(self, answers):
         self.answers = answers
     def get(self):
+      
         user = self.current_user 
+       
         try:
             time = self.get_secure_cookie(str(users[user]))
-            
+            if time == None:
+                self.redirect("/")
+                return
             
         except:
             print user,
             print " has experienced a key error"
             self.redirect("/login/")
             return
-        if time == None:
-            self.redirect("/")
-            return
+        
         start = fromTStamp(time)
         if users[user] == num_questions:
 
