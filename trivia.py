@@ -39,8 +39,16 @@ def toTStamp(DATETIME):
 def fromTStamp(stamp):
     date = datetime.datetime.utcfromtimestamp(float(stamp))
     return date
+def time_per_question(handler,num_questions):
+    times = {}
+    for i in range(num_questions-1):
+        start = fromTStamp(handler.get_secure_cookie(str(i)))
+        end = fromTStamp(handler.get_secure_cookie(str(i+1)))
+        times[str(i+1)] =  end-start
     
+    return times   
 num_questions = find_questions() # number of HTML files 
+question_times={}
 # all date time objects are UTC objects
 contest_start = datetime.datetime(2014, 4, 26,2,00)
 
@@ -154,19 +162,32 @@ changes the users entry in the users dict so the next question will be served.
                 global winners
                 winners.append(user)
                 global finish_times
+                global question_times
+                
+                q_time = time_per_question(self,num_questions)
+                
+                
                 start_time = fromTStamp(self.get_secure_cookie("0"))
                 end_time = datetime.datetime.utcnow()
                 finish_time = end_time - start_time
                 finish_times[user] = finish_time
+                q_time[str(num_questions)]= end_time - fromTStamp(self.get_secure_cookie(str(num_questions-1)))
+                question_times[user]= q_time
                 self.redirect("/winners")
                 return
         self.redirect("/question")
+class UserHandler(BaseHandler):
+    def get(self):
+        user = self.get_argument("user")
+        self.render("users.html",num_q=num_questions, times = question_times[user])
+        
     
 application = tornado.web.Application([
 	(r"/", BaseHandler),
 	(r"/question", Question),
 	(r"/leaderboard",LeaderBoard),
 	(r"/winners", WinnersHandler),
+	(r"/users", UserHandler),
 	(r"/login/", LoginHandler),
 ],static_path=STATIC_PATH,login_url=r"/login/", 
  cookie_secret="35wfa35tgtres5wf5yhxbt4"+str(random.randint(0,1000000)))
