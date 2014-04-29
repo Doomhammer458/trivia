@@ -144,7 +144,7 @@ changes the users entry in the users dict so the next question will be served.
     def post(self):
         answer = self.get_argument("answer")
         user = self.current_user
-        if answers[str(users[user]+1)] in answer.lower() :
+        if answers[str(users[user]+1)].lower() in answer.lower() :
             time=datetime.datetime.utcnow()
 	    time = toTStamp(time)
 	    self.set_secure_cookie(str(users[user]+1),time,expires_days=2)
