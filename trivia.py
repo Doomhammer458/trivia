@@ -165,11 +165,9 @@ changes the users entry in the users dict so the next question will be served.
                 global question_times
                 
                 q_time = time_per_question(self,num_questions)
-                
-                
-                start_time = fromTStamp(self.get_secure_cookie("0"))
+
                 end_time = datetime.datetime.utcnow()
-                finish_time = end_time - start_time
+                finish_time = end_time - contest_start
                 finish_times[user] = finish_time
                 q_time[str(num_questions)]= end_time - fromTStamp(self.get_secure_cookie(str(num_questions-1)))
                 question_times[user]= q_time
