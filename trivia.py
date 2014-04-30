@@ -7,48 +7,6 @@ import datetime
 import calendar
 import random
 
-
-def find_questions():
-    files = os.listdir(os.path.dirname(os.path.abspath(__file__)))
-    html_files = []
-    for f in files:
-        if ".html" in f:
-            html_files.append(f)
-    c = 0
-    question_nums = []
-    for f in html_files:
-        try:
-            question_nums.append(int(f[:-5]))
-            c+=1
-        except:
-            pass
-    if c == 0:
-        raise Exception("No questions found")
-    if sum(question_nums) != sum(range(1,c+1)):
-        raise Exception("Missing questions. Question numbers should be sequential")
-    return c
-        
-    
-def Timestamp(_datetime): 
-    return calendar.timegm(_datetime.timetuple())
-
-def toTStamp(DATETIME):
-        stamp = Timestamp(DATETIME)
-        stamp = str(stamp)
-        return stamp
-def fromTStamp(stamp):
-    date = datetime.datetime.utcfromtimestamp(float(stamp))
-    return date
-def time_per_question(handler,num_questions):
-    times = {}
-    for i in range(num_questions-1):
-        start = fromTStamp(handler.get_secure_cookie(str(i)))
-        end = fromTStamp(handler.get_secure_cookie(str(i+1)))
-        times[str(i+1)] =  end-start
-    
-    return times   
-num_questions = find_questions() # number of HTML files 
-question_times={}
 # all date time objects are UTC objects
 contest_start = datetime.datetime(2014, 4, 26,2,00)
 
@@ -72,6 +30,52 @@ winners = [] # ordered list of winners
 finish_times = {} # stores each users personal time to finish 
 
 STATIC_PATH= os.path.join(os.path.dirname(__file__),r"static/")
+def find_questions():
+    files = os.listdir(os.path.dirname(os.path.abspath(__file__)))
+    html_files = []
+    for f in files:
+        if ".html" in f:
+            html_files.append(f)
+    c = 0
+    question_nums = []
+    for f in html_files:
+        try:
+            question_nums.append(int(f[:-5]))
+            c+=1
+        except:
+            pass
+    if c == 0:
+        raise Exception("No questions found")
+    if sum(question_nums) != sum(range(1,c+1)):
+        raise Exception("Missing questions. Question numbers should be sequential")
+    return c
+def sum_time_deltas(delta_dict):
+    total = datetime.timedelta(seconds = 0)
+    for  key in delta_dict.keys():
+        total += delta_dict[key]
+    return total
+    
+def Timestamp(_datetime): 
+    return calendar.timegm(_datetime.timetuple())
+
+def toTStamp(DATETIME):
+        stamp = Timestamp(DATETIME)
+        stamp = str(stamp)
+        return stamp
+def fromTStamp(stamp):
+    date = datetime.datetime.utcfromtimestamp(float(stamp))
+    return date
+def time_per_question(handler,num_questions):
+    times = {}
+    for i in range(num_questions-1):
+        start = fromTStamp(handler.get_secure_cookie(str(i)))
+        end = fromTStamp(handler.get_secure_cookie(str(i+1)))
+        times[str(i+1)] =  end-start
+    
+    return times   
+num_questions = find_questions() # number of HTML files 
+question_times={}
+
 
 class BaseHandler(tornado.web.RequestHandler):
         @tornado.web.authenticated
@@ -165,11 +169,12 @@ changes the users entry in the users dict so the next question will be served.
                 global question_times
                 
                 q_time = time_per_question(self,num_questions)
-
                 end_time = datetime.datetime.utcnow()
                 finish_time = end_time - contest_start
                 finish_times[user] = finish_time
                 q_time[str(num_questions)]= end_time - fromTStamp(self.get_secure_cookie(str(num_questions-1)))
+                time_sum = sum_time_deltas(q_time)
+                q_time["total"] = time_sum
                 question_times[user]= q_time
                 self.redirect("/winners")
                 return
