@@ -182,7 +182,8 @@ changes the users entry in the users dict so the next question will be served.
 class UserHandler(BaseHandler):
     def get(self):
         user = self.get_argument("user")
-        self.render("users.html",num_q=num_questions, times = question_times[user])
+        self.render("users.html",user = user,  num_q=num_questions,
+        times = question_times[user])
         
     
 application = tornado.web.Application([
