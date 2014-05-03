@@ -8,7 +8,7 @@ import calendar
 import random
 
 # all date time objects are UTC objects
-contest_start = datetime.datetime(2014, 5, 6,2,00)
+contest_start = datetime.datetime(2014, 5, 4,2,00)
 
 answers = {  #dict to store answers
 "1" : "bahrain",
