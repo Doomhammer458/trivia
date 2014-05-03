@@ -78,7 +78,7 @@ question_times={}
 
 
 class BaseHandler(tornado.web.RequestHandler):
-        @tornado.web.authenticated
+        
         def get(self):
             self.render("index.html",Now = datetime.datetime.utcnow(), 
             datetime=datetime.datetime,contest_start = contest_start)
