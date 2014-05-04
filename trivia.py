@@ -156,7 +156,8 @@ changes the users entry in the users dict so the next question will be served.
     def post(self):
         answer = self.get_argument("answer")
         if len(answer) > 30:
-            self.write("please enter 1 answer at a time")
+            self.write('<head><meta HTTP-EQUIV="REFRESH" content="10"; url="/question"> </head> \
+            <body>please enter 1 answer at a time </body>')
             return 
         user = self.current_user
         if answers[str(users[user]+1)].lower() in answer.lower() :
