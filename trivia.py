@@ -164,11 +164,11 @@ changes the users entry in the users dict so the next question will be served.
         
         if len(answer) > 30:
             self.write('<head><meta HTTP-EQUIV="REFRESH" content="10"; url="/question"> </head> \
-            <body>please enter 1 answer at a time </body>')
+            <body>Please enter 1 answer at a time. </body>')
             return
         if  datetime.datetime.utcnow()- user_data["last_answer"][user] < datetime.timedelta(seconds=2):
             self.write('<head><meta HTTP-EQUIV="REFRESH" content="5"; url="/question"> </head> \
-            <body>only enter 1 answer every 2 seconds </body>')
+            <body>Answers are  limited to 1 answer every 2 seconds. </body>')
             return
         
         
