@@ -22,12 +22,13 @@ answers = {  #dict to store answers
 "9": "answer9",  
 "10": "answer10" }
 
+user_data= {} #master dict of user data
+user_data["users"] = {} #dict that stores user progress
 
-users = {} #dict that stores user progress
+user_data["winners"] = [] # ordered list of winners
 
-winners = [] # ordered list of winners
-
-finish_times = {} # stores each users personal time to finish 
+user_data["finish"] = {} # stores each users personal time to finish 
+user_data["question_times"] = {}
 
 STATIC_PATH= os.path.join(os.path.dirname(__file__),r"static/")
 def find_questions():
@@ -74,7 +75,7 @@ def time_per_question(handler,num_questions):
     
     return times   
 num_questions = find_questions() # number of HTML files 
-question_times={}
+
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -106,7 +107,7 @@ class LoginHandler(BaseHandler):
 	        
             user = self.get_argument("user")
             global users
-            users[user] = 0
+            user_data["users"][user] = 0
         
             self.set_secure_cookie("login",user,expires_days=5)
             self.redirect("/")
@@ -114,10 +115,10 @@ class LoginHandler(BaseHandler):
 class LeaderBoard(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render("leaderboard.html", users=users)
+        self.render("leaderboard.html", users=user_data["users"])
 class WinnersHandler(BaseHandler):
     def get(self):
-        self.render("winners.html", winners = winners, time=finish_times)
+        self.render("winners.html", winners = user_data["winners"], time=user_data["finish"])
 
                 
 class Question(BaseHandler):
@@ -133,7 +134,7 @@ changes the users entry in the users dict so the next question will be served.
     def get(self):
         user = self.current_user 
         try:
-            time = self.get_secure_cookie(str(users[user]))
+            time = self.get_secure_cookie(str(user_data["users"][user]))
             
             
         except:
@@ -145,11 +146,11 @@ changes the users entry in the users dict so the next question will be served.
             self.redirect("/")
             return
         start = fromTStamp(time)
-        if users[user] == num_questions:
+        if user_data["users"][user] == num_questions:
 
             self.redirect("/winners")
             return
-        htmlPage = str(users[user]+1) +".html"
+        htmlPage = str(user_data["users"][user]+1) +".html"
         self.render(htmlPage,time=start,Now = datetime.datetime.utcnow(),
         timedelta = datetime.timedelta)
         
@@ -160,26 +161,23 @@ changes the users entry in the users dict so the next question will be served.
             <body>please enter 1 answer at a time </body>')
             return 
         user = self.current_user
-        if answers[str(users[user]+1)].lower() in answer.lower() :
+        if answers[str(user_data["users"][user]+1)].lower() in answer.lower() :
             time=datetime.datetime.utcnow()
 	    time = toTStamp(time)
-	    self.set_secure_cookie(str(users[user]+1),time,expires_days=2)
-            users[user] += 1
+	    self.set_secure_cookie(str(user_data["users"][user]+1),time,expires_days=2)
+            user_data["users"][user] += 1
 	 
-            if users[user]==num_questions:
-                global winners
-                winners.append(user)
-                global finish_times
-                global question_times
-                
+            if user_data["users"][user]==num_questions:
+                global user_data
+                user_data["winners"].append(user)
                 q_time = time_per_question(self,num_questions)
                 end_time = datetime.datetime.utcnow()
                 finish_time = end_time - contest_start
-                finish_times[user] = finish_time
+                user_data["finish"][user] = finish_time
                 q_time[str(num_questions)]= end_time - fromTStamp(self.get_secure_cookie(str(num_questions-1)))
                 time_sum = sum_time_deltas(q_time)
                 q_time["total"] = time_sum
-                question_times[user]= q_time
+                user_data["question_times"][user]= q_time
                 self.redirect("/winners")
                 return
         self.redirect("/question")
@@ -187,7 +185,7 @@ class UserHandler(BaseHandler):
     def get(self):
         user = self.get_argument("user")
         self.render("users.html",user = user,  num_q=num_questions,
-        times = question_times[user])
+        times = user_data["question_times"][user])
         
     
 application = tornado.web.Application([
