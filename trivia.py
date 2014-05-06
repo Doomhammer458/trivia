@@ -8,7 +8,7 @@ import calendar
 import random
 
 # all date time objects are UTC objects
-contest_start = datetime.datetime(2014, 4, 26,2,00)
+contest_start = datetime.datetime(2014, 4, 26,2,00) # year, month , day , hour, minute
 
 answers = {  #dict to store answers
 "1" : "bahrain",
@@ -21,6 +21,10 @@ answers = {  #dict to store answers
 "8": "answer8",
 "9": "answer9",  
 "10": "answer10" }
+
+#if setting up a contest, there is no need to modify anything below this comment
+
+
 
 user_data= {} #master dict of user data
 user_data["users"] = {} #dict that stores user progress
@@ -156,10 +160,12 @@ changes the users entry in the users dict so the next question will be served.
         
     def post(self):
         answer = self.get_argument("answer")
+        
         if len(answer) > 30:
             self.write('<head><meta HTTP-EQUIV="REFRESH" content="10"; url="/question"> </head> \
             <body>please enter 1 answer at a time </body>')
             return 
+            
         user = self.current_user
         if answers[str(user_data["users"][user]+1)].lower() in answer.lower() :
             time=datetime.datetime.utcnow()
