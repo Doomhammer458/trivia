@@ -28,11 +28,10 @@ answers = {  #dict to store answers
 
 user_data= {} #master dict of user data
 user_data["users"] = {} #dict that stores user progress
-
 user_data["winners"] = [] # ordered list of winners
-
 user_data["finish"] = {} # stores each users personal time to finish 
 user_data["question_times"] = {}
+user_data["last_answer"] = {}
 
 STATIC_PATH= os.path.join(os.path.dirname(__file__),r"static/")
 def find_questions():
@@ -110,9 +109,9 @@ class LoginHandler(BaseHandler):
 
 	        
             user = self.get_argument("user")
-            global users
+            global user_data
             user_data["users"][user] = 0
-        
+            user_data["last_answer"][user] = datetime.datetime.utcnow()
             self.set_secure_cookie("login",user,expires_days=5)
             self.redirect("/")
 
@@ -159,14 +158,20 @@ changes the users entry in the users dict so the next question will be served.
         timedelta = datetime.timedelta)
         
     def post(self):
+        global user_data
+        user = self.current_user
         answer = self.get_argument("answer")
         
         if len(answer) > 30:
             self.write('<head><meta HTTP-EQUIV="REFRESH" content="10"; url="/question"> </head> \
             <body>please enter 1 answer at a time </body>')
-            return 
-            
-        user = self.current_user
+            return
+        if  datetime.datetime.utcnow()- user_data["last_answer"][user] < datetime.timedelta(seconds=2):
+            self.write('<head><meta HTTP-EQUIV="REFRESH" content="5"; url="/question"> </head> \
+            <body>only enter 1 answer every 2 seconds </body>')
+            return
+        
+        
         if answers[str(user_data["users"][user]+1)].lower() in answer.lower() :
             time=datetime.datetime.utcnow()
 	    time = toTStamp(time)
@@ -174,7 +179,7 @@ changes the users entry in the users dict so the next question will be served.
             user_data["users"][user] += 1
 	 
             if user_data["users"][user]==num_questions:
-                global user_data
+                
                 user_data["winners"].append(user)
                 q_time = time_per_question(self,num_questions)
                 end_time = datetime.datetime.utcnow()
@@ -186,6 +191,8 @@ changes the users entry in the users dict so the next question will be served.
                 user_data["question_times"][user]= q_time
                 self.redirect("/winners")
                 return
+                
+        user_data["last_answer"][user] = datetime.datetime.utcnow()
         self.redirect("/question")
 class UserHandler(BaseHandler):
     def get(self):
