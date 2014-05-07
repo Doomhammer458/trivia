@@ -77,6 +77,17 @@ def time_per_question(handler,num_questions):
         times[str(i+1)] =  end-start
     
     return times   
+def sort_users(user_dict, num_questions):
+    sort_list = []
+    c = num_questions +1
+    for i in range(c):
+        for user in user_dict.keys():
+            if user_dict[user]== c-i:
+                sort_list.append(user) 
+    return sort_list
+    
+    
+    
 num_questions = find_questions() # number of HTML files 
 
 
@@ -118,7 +129,8 @@ class LoginHandler(BaseHandler):
 class LeaderBoard(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render("leaderboard.html", users=user_data["users"])
+        self.render("leaderboard.html", users=user_data["users"],
+        sorted_users = sort_users(user_data["users"],num_questions))
 class WinnersHandler(BaseHandler):
     def get(self):
         self.render("winners.html", winners = user_data["winners"], time=user_data["finish"])

@@ -14,10 +14,11 @@
     <title>Leader Board </title>
 </head>
 <body>
+<h1>Leader Board</h1>
+<br>
+{%for user in sorted_users%}
 
-{%for key in users.keys()%}
-
-{{key}} has completed question {{users[key]}}
+{{user}} has completed question {{users[user]}}
 <br>
 {%end%}
     <script src="/static/js/vendor/jquery.js"></script>
