@@ -16,10 +16,29 @@
 <body>
 <h1>Leader Board</h1>
 <br>
-{%for user in sorted_users%}
+<div class = "row">
+<div class = "small-6 columns">
+User
+</div>
 
-{{user}} has completed question {{users[user]}}
+
+
+<div class = "small-6 columns" end>
+Question
+</div>
+
+</div>
 <br>
+{%for user in sorted_users%}
+<div class = "row">
+<div class = "small-6 columns">
+{{user}} 
+</div>
+<div class = "small-6 columns">
+ {{users[user]}}
+ </div>
+ </div>
+
 {%end%}
     <script src="/static/js/vendor/jquery.js"></script>
     <script src="/static/js/foundation.min.js"></script>

@@ -82,8 +82,9 @@ def sort_users(user_dict, num_questions):
     c = num_questions +1
     for i in range(c):
         for user in user_dict.keys():
-            if user_dict[user]== c-i:
+            if user_dict[user]== c-i-1:
                 sort_list.append(user) 
+        
     return sort_list
     
     
