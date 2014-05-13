@@ -1,0 +1,73 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+ <link rel="shortcut icon" href="/static/favicon.ico" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="refresh" content="60">
+  <link rel="stylesheet" href="/static/css/normalize.css">
+  <link rel="stylesheet" href="/static/css/foundation.css" />
+ <script src="/static/js/vendor/modernizr.js"></script>
+    <title>Prizes</title>
+</head>
+<body>
+{% from datetime import timedelta %}
+<div class = "row">
+<h1> Prizes </h1>
+
+</div>
+<br>
+<div class = "row">
+<div class = "small-3 columns">
+Place
+</div>
+
+
+
+<div class = " small-9 columns end" >
+Prize
+
+</div>
+
+
+</div>
+
+<br>
+{%for i in range(len(winners))%}
+{%if i > len(prizes) -1 %}
+{%break%}
+{%end%}
+
+
+
+
+<div class = "row">
+<div class = "small-2 columns">
+{{i+1}}
+</div>
+
+
+
+<div class = "small-10 columns end">
++/u/dogetipbot @{{winners[i]}} {{prizes[i]}} doge verify 
+
+
+</div>
+
+
+</div>
+
+<br>
+{%end%}
+
+
+    <script src="/static/js/vendor/jquery.js"></script>
+    <script src="/static/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>

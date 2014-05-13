@@ -33,6 +33,13 @@ user_data["finish"] = {} # stores each users personal time to finish
 user_data["question_times"] = {}
 user_data["last_answer"] = {}
 
+
+num_prizes = 20
+runner_up_prize = 1000
+prizes = [20000,10000,5000] #first second and third place
+for i in range(num_prizes - 3):  #runners up
+    prizes.append(runner_up_prize)
+
 STATIC_PATH= os.path.join(os.path.dirname(__file__),r"static/")
 def find_questions():
     files = os.listdir(os.path.dirname(os.path.abspath(__file__)))
@@ -213,16 +220,20 @@ class UserHandler(BaseHandler):
         self.render("users.html",user = user,  num_q=num_questions,
         times = user_data["question_times"][user])
         
+class PrizeHandler(BaseHandler):
     
+    def get(self):
+        self.render("prizes.html", winners = user_data["winners"], prizes = prizes)
 application = tornado.web.Application([
 	(r"/", BaseHandler),
 	(r"/question", Question),
 	(r"/leaderboard",LeaderBoard),
 	(r"/winners", WinnersHandler),
 	(r"/users", UserHandler),
+	(r"/prizes", PrizeHandler),
 	(r"/login/", LoginHandler),
-],static_path=STATIC_PATH,login_url=r"/login/", 
- cookie_secret="35wfa35tgtres5wf5yhxbt4"+str(random.randint(0,1000000)))
+],static_path=STATIC_PATH,login_url=r"/login/", #debug=True,
+ cookie_secret="35wfa35tgtres5wf5tyhxbt4"+str(random.randint(0,1000000)))
 
 if __name__ == "__main__":
     application.listen(80)
