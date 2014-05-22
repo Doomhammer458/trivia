@@ -38,6 +38,7 @@ user_data["winners"] = [] # ordered list of winners
 user_data["finish"] = {} # stores each users personal time to finish 
 user_data["question_times"] = {}
 user_data["last_answer"] = {}
+user_data["correct"] = {}
 
 for i in range(num_prizes - 3):  #runners up
     prizes.append(runner_up_prize)
@@ -133,6 +134,7 @@ class LoginHandler(BaseHandler):
             global user_data
             user_data["users"][user] = 0
             user_data["last_answer"][user] = datetime.datetime.utcnow()
+            user_data["correct"][user] = -1
             self.set_secure_cookie("login",user,expires_days=5)
             self.redirect("/")
 
@@ -160,13 +162,12 @@ changes the users entry in the users dict so the next question will be served.
         user = self.current_user 
         try:
             time = self.get_secure_cookie(str(user_data["users"][user]))
-            
-            
         except:
             print user,
             print " has experienced a key error"
             self.redirect("/login/")
             return
+            
         if time == None:
             self.redirect("/")
             return
@@ -177,7 +178,8 @@ changes the users entry in the users dict so the next question will be served.
             return
         htmlPage = str(user_data["users"][user]+1) +".html"
         self.render(htmlPage,time=start,Now = datetime.datetime.utcnow(),
-        timedelta = datetime.timedelta)
+        timedelta = datetime.timedelta, correct = user_data["correct"][user],
+        last = user_data["last_answer"][user] )
         
     def post(self):
         global user_data
@@ -199,6 +201,7 @@ changes the users entry in the users dict so the next question will be served.
 	    time = toTStamp(time)
 	    self.set_secure_cookie(str(user_data["users"][user]+1),time,expires_days=2)
             user_data["users"][user] += 1
+            user_data["correct"][user] = 1
 	 
             if user_data["users"][user]==num_questions:
                 
@@ -213,7 +216,8 @@ changes the users entry in the users dict so the next question will be served.
                 user_data["question_times"][user]= q_time
                 self.redirect("/winners")
                 return
-                
+        else:
+            user_data["correct"][user] = 0
         user_data["last_answer"][user] = datetime.datetime.utcnow()
         self.redirect("/question")
 class UserHandler(BaseHandler):
@@ -234,7 +238,7 @@ application = tornado.web.Application([
 	(r"/users", UserHandler),
 	(r"/prizes", PrizeHandler),
 	(r"/login/", LoginHandler),
-],static_path=STATIC_PATH,login_url=r"/login/", #debug=True,
+],static_path=STATIC_PATH,login_url=r"/login/", debug=True,
  cookie_secret="35wfa35tgtres5wf5tyhxbt4"+str(random.randint(0,1000000)))
 
 if __name__ == "__main__":

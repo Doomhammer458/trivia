@@ -54,10 +54,19 @@
 
 <br>
 <br>
+{% if Now - last < timedelta(seconds=5)%}
+{% if correct == 1%}
+<strong class = "success button"> Correct answer!  </strong>
+{%end%}
+{% if correct == 0%}
+<strong class = "alert button"> Wrong answer!  </strong>
+{%end%}
+{%end%}
     <form method="post" action="/question" > 
     Answer:<input type="text" size =40 name="answer"> 
     <input class = "round button" type=submit value="Submit"> 
     </form> 
+
 </ul>
 <br>
     <script src="/static/js/vendor/jquery.js"></script>

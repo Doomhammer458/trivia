@@ -51,7 +51,14 @@
 <li>Capital city is Manama </li>
 
 {%end%}
-
+{% if Now - last < timedelta(seconds=5)%}
+{% if correct == 1%}
+<strong class = "success button"> Correct answer!  </strong>
+{%end%}
+{% if correct == 0%}
+<strong class = "alert button"> Wrong answer!  </strong>
+{%end%}
+{%end%}
 <br>
 <br>
     <form method="post" action="/question" > 
