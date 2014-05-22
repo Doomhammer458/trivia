@@ -44,7 +44,11 @@
 
 <br>
 <br>
-{% if Now - last < timedelta(seconds=5)%}
+
+    <form method="post" action="/question" > 
+    Answer:<input type="text" size =40 name="answer"> 
+    <input class = "round button" type=submit value="Submit"> 
+	{% if Now - last < timedelta(seconds=5)%}
 {% if correct == 1%}
 <strong class = "success button"> Correct answer!  </strong>
 {%end%}
@@ -52,9 +56,6 @@
 <strong class = "alert button"> Wrong answer!  </strong>
 {%end%}
 {%end%}
-    <form method="post" action="/question" > 
-    Answer:<input type="text" size =40 name="answer"> 
-    <input class = "round button" type=submit value="Submit"> 
     </form> 
 
 </ul>
