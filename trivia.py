@@ -22,6 +22,12 @@ answers = {  #dict to store answers
 "9": "answer9",  
 "10": "answer10" }
 
+
+
+num_prizes = 20
+runner_up_prize = 1000
+prizes = [20000,10000,5000] #first second and third place
+
 #if setting up a contest, there is no need to modify anything below this comment
 
 
@@ -33,10 +39,6 @@ user_data["finish"] = {} # stores each users personal time to finish
 user_data["question_times"] = {}
 user_data["last_answer"] = {}
 
-
-num_prizes = 20
-runner_up_prize = 1000
-prizes = [20000,10000,5000] #first second and third place
 for i in range(num_prizes - 3):  #runners up
     prizes.append(runner_up_prize)
 
